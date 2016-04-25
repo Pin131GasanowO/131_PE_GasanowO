@@ -58,7 +58,7 @@ namespace _131_PE_GasanowO
                     weeks.Add(new Week(DateTime.Parse(parseLine[0]), parseLine.Skip(1).Select(a => Int32.Parse(a)).ToArray()));
                 }
             }
-            for (int i = 0; 1 < weeks.Count; i++)
+            for (int i = 0; i < weeks.Count; i++)
             {
                 weeks[i].Show();
             }
