@@ -82,6 +82,7 @@ namespace _131_PE_GasanowO
         }
     }
 }
+//Простое чтение из файла
 //int i = 0;
 //int[] t;
 
