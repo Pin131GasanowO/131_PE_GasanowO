@@ -52,7 +52,7 @@ namespace _131_PE_GasanowO
 
             using (StreamReader reader = new StreamReader(name, Encoding.Default))
             {
-                while(! reader.EndOfStream)
+                while (!reader.EndOfStream)
                 {
                     string[] parseLine = reader.ReadLine().Split(';');
                     weeks.Add(new Week(DateTime.Parse(parseLine[0]), parseLine.Skip(1).Select(a => Int32.Parse(a)).ToArray()));
@@ -67,8 +67,8 @@ namespace _131_PE_GasanowO
 
         public class Week
         {
-            public DateTime Date {get; set;}
-            public int[] Results{get; set;}
+            public DateTime Date { get; set; }
+            public int[] Results { get; set; }
             public Week(DateTime dt, int[] results)
             {
                 Date = dt;
@@ -103,5 +103,4 @@ namespace _131_PE_GasanowO
 //Console.WriteLine("Зарплата работника составляет: {0} рублей.", summa);
 //Console.ReadKey();
 //Console.ReadKey();
-
 
