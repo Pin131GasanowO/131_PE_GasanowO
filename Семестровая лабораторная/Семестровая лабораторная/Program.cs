@@ -9,98 +9,87 @@ namespace _131_PE_GasanowO
 {
     class Program
     {
-        static int[] Array(int[] Calculation_of_wages)
+        static double GetDaySalary(Day day)
         {
-            int[] z = new int[Calculation_of_wages.Length];
-            for (int i = 0; i < Calculation_of_wages.Length; i++)
+            double salary;
+            if (day.IsWeekend)
             {
-                if (i > 4)
+                if (day.Revenue <= 100000)
                 {
-                    if (Calculation_of_wages[i] <= 100000)
-                    {
-                        z[i] = Calculation_of_wages[i] / 100 * 15;
-                    }
-                    if (Calculation_of_wages[i] > 10000)
-                    {
-                        z[i] = ((Calculation_of_wages[i] - 10000) / 100 * 10 + 500) * 2;
-                    }
-                    else
-                    {
-                        z[i] = (Calculation_of_wages[i] / 100) * 5;
-                    }
+                    salary = day.Revenue / 100 * 15;
+                }
+                if (day.Revenue > 10000)
+                {
+                    salary = ((day.Revenue - 10000) / 100 * 10 + 500) * 2;
                 }
                 else
                 {
-                    if (Calculation_of_wages[i] > 10000)
-                    {
-                        z[i] = (Calculation_of_wages[i] - 10000) / 100 * 10 + 500;
-                    }
-                    else
-                    {
-                        z[i] = (Calculation_of_wages[i] / 100) * 5;
-                    }
+                    salary = (day.Revenue / 100) * 5;
+                }
+
+            }
+            else
+            {
+                if (day.Revenue > 10000)
+                {
+                    salary = (day.Revenue - 10000) / 100 * 10 + 500;
+                }
+                else
+                {
+                    salary = (day.Revenue / 100) * 5;
                 }
             }
-            return z;
+            return salary;
         }
         static void Main(string[] args)
         {
-            int[] r;
-            List<Week> weeks = new List<Week>();
-            Console.WriteLine("Введите название файла: ");
+            Sotrudnik sotrudnik;
+            Console.WriteLine("Введите название файла");
             string name = Console.ReadLine();
-
             using (StreamReader reader = new StreamReader(name, Encoding.Default))
             {
+                sotrudnik = new Sotrudnik(reader);
+            }
+            double sum = 0;
+            for (int i = 0; i < sotrudnik.days.Count; i++)
+            {
+                double salary = GetDaySalary(sotrudnik.days[i]);
+                sum += salary;
+                Console.WriteLine("Заработано за {0} - {1} руб.", sotrudnik.days[i].Date, salary);
+            }
+            Console.WriteLine("Всего заработано: " + sum);
+            Console.ReadKey();
+        }
+        public class Day
+        {
+            public DateTime Date;
+            public double Revenue;
+            public bool IsWeekend;
+            public Day(DateTime date, double revenue, bool iW)
+            {
+                Date = date;
+                Revenue = revenue;
+                IsWeekend = iW;
+            }
+        }
+        public class Sotrudnik
+        {
+            public List<Day> days;
+
+            public Sotrudnik(StreamReader reader)
+            {
+                days = new List<Day>();
+                int i = 1;
                 while (!reader.EndOfStream)
                 {
                     string[] parseLine = reader.ReadLine().Split(';');
-                    weeks.Add(new Week(DateTime.Parse(parseLine[0]), parseLine.Skip(1).Select(a => Int32.Parse(a)).ToArray()));
+                    bool isWeekend;
+                    if (i >= 5 && i++ <= 7) isWeekend = true;
+                    else isWeekend = false;
+                    if (i == 7) i = 1;
+                    days.Add(new Day(DateTime.Parse(parseLine[0]),Double.Parse(parseLine[1]), isWeekend));
                 }
-            }
-            for (int i = 0; i < weeks.Count; i++)
-            {
-                weeks[i].Show();
-            }
-            Console.ReadKey();
-        }
-
-        public class Week
-        {
-            public DateTime Date { get; set; }
-            public int[] Results { get; set; }
-            public Week(DateTime dt, int[] results)
-            {
-                Date = dt;
-                Results = results;
-            }
-            public void Show()
-            {
-                int sum = Array(Results).Sum();
-                Console.WriteLine("Сотрудник заработал {0}: {1} ", Date, sum);
             }
         }
     }
 }
-//Простое чтение из файла
-//int i = 0;
-//int[] t;
-
-//Console.WriteLine("Введите имя файла:");
-
-//string name = Console.ReadLine();
-//string[] mas = File.ReadAllText(name).Split(new char[] { ' ' });
-//int[] total = new int[mas.Length];
-//for (i = 0; i < mas.Length; i++)
-//{
-//    total[i] = Int32.Parse(mas[i]);
-//}
-
-//t = Array(total);
-//int summa = t.Sum();
-
-//Console.WriteLine("\n");
-//Console.WriteLine("Зарплата работника составляет: {0} рублей.", summa);
-//Console.ReadKey();
-//Console.ReadKey();
-
