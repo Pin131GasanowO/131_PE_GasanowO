@@ -45,6 +45,43 @@ namespace Reading_from_file
 
             return days;
         }
+
+        static void ReadFromFile(string fPath)
+        {
+            List<string> strData = new List<string>();
+            StreamReader sr = new StreamReader(fPath);
+            while (true)
+            {
+                string bufer = sr.ReadLine();
+                if (bufer == null) break;
+                strData.Add(bufer);
+            }
+            List<DateTime> lDates = new List<DateTime>();
+            List<int> lSells = new List<int>();
+            foreach (string s in strData)
+            {
+                string[] str = s.Split(';');
+                lDates.Add(Convert.ToDateTime(str[0]));
+                lSells.Add(int.Parse(str[1]));
+            }
+            int sum = 0;
+
+            for (int i = 0; i < lDates.Count; i++)
+            {
+                if (lDates[i].Date.DayOfWeek == DayOfWeek.Sunday || lDates[i].Date.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    sum += OnlyForDay(lSells[i], true);
+                    Console.WriteLine("В день {0} сотрудник заработал {1} руб", lDates[i], OnlyForDay(lSells[i], true));
+                }
+                else
+                {
+                    sum += OnlyForDay(lSells[i], false);
+                    Console.WriteLine("В день {0} сотрудник заработал {1} руб", lDates[i], OnlyForDay(lSells[i], false));
+                }
+            }
+            Console.WriteLine("Всего заработано:{0} руб.", sum);
+
+        }
         static void Main(string[] args)
         {
             int total = 0;
@@ -60,17 +97,9 @@ namespace Reading_from_file
                 switch (mode.Key)
                 {
                     case ConsoleKey.D2:
+                        Console.WriteLine("Введите название файла");
+                        ReadFromFile(Console.ReadLine());
 
-                        int counter = 0;
-                        string line;
-
-                        System.IO.StreamReader file =
-                        new System.IO.StreamReader(@"C:\Users\Admin\Source\Repos\131_PE_GasanowO\Reading from file\Reading from file\bin\Debug\Валера.txt");
-                        while ((line = file.ReadLine()) != null)
-                        {
-                            System.Console.WriteLine(line);
-                            counter++;
-                        }
                         Console.ReadKey();
                         break;
                     case ConsoleKey.D1:
